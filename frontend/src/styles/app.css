@@ -1,0 +1,14 @@
+.app {
+	width: 100%;
+	height: 200vh;
+}
+
+.app-renderer {
+	width: 100%;
+	height: 50%;
+}
+
+.app-physics {
+	width: 100%;
+	height: 50%;
+}

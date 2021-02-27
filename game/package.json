@@ -1,0 +1,13 @@
+{
+  "name": "game",
+  "version": "1.0.0",
+  "description": "The game code for broadside",
+  "main": "src/index.js",
+  "scripts": {},
+  "author": "josephnormandev",
+  "license": "ISC",
+  "dependencies": {
+    "matter-js": "^0.16.1",
+    "three": "^0.125.2"
+  }
+}

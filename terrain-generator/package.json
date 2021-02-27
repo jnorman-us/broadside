@@ -1,0 +1,14 @@
+{
+  "name": "terrain-generator",
+  "version": "1.0.0",
+  "description": "Creates a test terrain",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "nodejs src/index.js"
+  },
+  "author": "josephnormandev",
+  "license": "ISC",
+  "dependencies": {
+    "matter-js": "^0.16.1"
+  }
+}
