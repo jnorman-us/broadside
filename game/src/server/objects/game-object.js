@@ -5,8 +5,6 @@ const KeyValue = require('./key-value.js');
 const notImplementedError = require('../../errors/not-implemented.js');
 const missingParamError = require('../../errors/missing-param.js');
 
-exports.id_iterator = 0;
-
 exports.TYPE = 'game-object';
 
 exports.Obj = class GameObject
