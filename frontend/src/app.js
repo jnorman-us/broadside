@@ -17,9 +17,6 @@ export default class App extends React.Component
 
 		this.renderer_mount = null;
 		this.physics_mount = null;
-
-		console.log(this.server);
-
 	}
 
 	componentDidMount()
@@ -34,6 +31,13 @@ export default class App extends React.Component
 		{
 			this.server.addObject(base);
 		}
+
+		for(const [id, game_object] of this.server.game_objects)
+		{
+			this.client.addObject(game_object.getBase());
+		}
+
+		console.log(this.client);
 	}
 
 	render()

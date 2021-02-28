@@ -3,9 +3,9 @@ const { Engine, Render, World } = require('matter-js');
 const noSuchTypeError = require('../errors/no-such-type.js');
 
 // a list of all instantiable game object classes
-const WaterTile = require('./objects/tiles/water-tile.js');
-const SandTile = require('./objects/tiles/sand-tile.js');
 const GrassTile = require('./objects/tiles/grass-tile.js');
+const SandTile = require('./objects/tiles/sand-tile.js');
+const WaterTile = require('./objects/tiles/water-tile.js');
 const WorldBorder = require('./objects/utils/world-border.js');
 
 module.exports = class Server
@@ -54,9 +54,6 @@ module.exports = class Server
 				break;
 			case WorldBorder.TYPE:
 				game_object = new WorldBorder.Obj(this.id_iterator);
-				break;
-			default:
-				game_object = null;
 				break;
 		}
 

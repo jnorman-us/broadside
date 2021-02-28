@@ -55,7 +55,7 @@ exports.Obj = class GameObject
 
 	addKeyValue(key_value)
 	{
-		this.state.set(key_value.key, this.key_value);
+		this.state.set(key_value.key, key_value);
 		return key_value;
 	}
 }

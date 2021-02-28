@@ -3,7 +3,7 @@ module.exports = class KeyValue
 	constructor(key)
 	{
 		this.key = key;
-		this.value = value;
+		this.value = null;
 	}
 
 	update(value)

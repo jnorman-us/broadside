@@ -14,7 +14,6 @@ exports.Obj = class Tile extends GameObject.Obj
 		this.radius = this.addKeyValue(new KeyValue('radius', false));
 		this.height = this.addKeyValue(new KeyValue('height', false));
 		this.adjacents = this.addKeyValue(new KeyValue('adjacents', false));
-
 	}
 
 	initialize(values)
