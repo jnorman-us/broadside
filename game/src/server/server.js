@@ -86,6 +86,8 @@ module.exports = class Server
 	{
 		Render.stop(this.render);
 
+		this.mount_element.removeChild(this.render.canvas);
+		this.mount_element = null;
 		this.render = null;
 	}
 }
