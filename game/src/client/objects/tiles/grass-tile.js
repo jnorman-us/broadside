@@ -5,7 +5,10 @@ const Tile = require('./tile.js');
 exports.TYPE = 'grass-tile';
 
 exports.MATERIAL = new MeshStandardMaterial({
-	color: 0x00ff00,
+	roughness: .95,
+	transparent: false,
+	color: 0x7cfc00,
+	flatShading: true,
 });
 
 exports.Obj = class GrassTile extends Tile.Obj

@@ -7,7 +7,6 @@ const SIDE_LENGTH = 64;
 
 const TOTAL_HEIGHT = 100;
 const WATER_HEIGHT = 50;
-const RADIUS = 15;
 
 const heightmap = new HeightMap(
 	SIDE_LENGTH, // mapDimension
@@ -19,7 +18,7 @@ const heightmap = new HeightMap(
 const tile_out = [];
 
 // constants for radius etc
-const radius = 15;
+const radius = 8;
 const a = Math.cos(Math.PI / 6) * radius;
 const b = 3 / 2 * radius;
 
@@ -44,13 +43,15 @@ for(var y = 0; y < height; y ++)
 			else
 				position = Vector.create(x * 2 * b + b, y * a);
 
-			const tile_height = heightmap[y][col] * TOTAL_HEIGHT - WATER_HEIGHT;
+			var tile_height = heightmap[y][col] * TOTAL_HEIGHT - WATER_HEIGHT;
 
 			var type = '';
-			if(tile_height >= 20)
+			if(tile_height >= 25)
 				type = 'grass-tile';
-			else if (tile_height > 0)
+			else if (tile_height >= 0)
+			{
 				type = 'sand-tile';
+			}
 			else
 				type = 'water-tile';
 

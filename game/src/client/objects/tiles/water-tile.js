@@ -6,9 +6,9 @@ const KeyValue = require('../key-value.js');
 exports.TYPE = 'water-tile';
 
 exports.MATERIAL = new MeshStandardMaterial({
-	roughness: .95,
+	roughness: .1,
 	transparent: false,
-	color: 0x0f0,
+	color: 0xc2b280,
 	flatShading: true,
 });
 

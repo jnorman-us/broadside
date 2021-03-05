@@ -1,4 +1,4 @@
-const { Face3, BufferGeometry, Mesh, Vector3, SphereGeometry } = require('three');
+const { BufferAttribute, BufferGeometry, Mesh, Vector3, SphereGeometry } = require('three');
 
 const notImplementedError = require('../../../errors/not-implemented.js');
 
@@ -25,35 +25,71 @@ exports.Obj = class Tile extends GameObject.Obj
 		terrain.addTile(this);
 	}
 
-	generateMesh()
+	generateMesh(neighbors)
 	{
 		const radius = this.radius.value;
 
-		const vertices = [];
-		vertices.push(new Vector3(0, 0, 0)); // 0
-		vertices.push(new Vector3(0, 0, radius)); // 1, bottom, then left
-		vertices.push(new Vector3(-radius * Math.sin(Math.PI / 3), 0, radius * Math.cos(Math.PI / 3))); // 2, bot left, then top left
-		vertices.push(new Vector3(-radius * Math.sin(Math.PI / 3), 0, -radius * Math.cos(Math.PI / 3))); // 3, top left, then top right
-		vertices.push(new Vector3(0, 0, -radius)); // 4, top, then bot right
-		vertices.push(new Vector3(radius * Math.sin(Math.PI / 3), 0, -radius * Math.cos(Math.PI / 3))); // 5, top right, then bottom right
-		vertices.push(new Vector3(radius * Math.sin(Math.PI / 3), 0, radius * Math.cos(Math.PI / 3))); // 6, bot right, then bot left
+		const vertices = [
+			[0, this.height.value, 0], // center
+			[0, 0, radius], // bottom, rotated to left
+			[-radius * Math.sin(Math.PI / 3), 0, radius * Math.cos(Math.PI / 3)], // bottom left, rotated to top left
+			[-radius * Math.sin(Math.PI / 3), 0, -radius * Math.cos(Math.PI / 3)], // top left, rotated to top right
+			[0, 0, -radius], // top, rotated to bot right
+			[radius * Math.sin(Math.PI / 3), 0, -radius * Math.cos(Math.PI / 3)], // top right, rotated to bottom right
+			[radius * Math.sin(Math.PI / 3), 0, radius * Math.cos(Math.PI / 3)], // bottom right, rotated to bottom left
+		];
 
-		const faces = [];
-		faces.push(new Face3(0, 2, 1));
-		faces.push(new Face3(0, 3, 2));
-		faces.push(new Face3(0, 4, 3));
-		faces.push(new Face3(0, 5, 4));
-		faces.push(new Face3(0, 6, 5));
-		faces.push(new Face3(0, 1, 6));
+		for(const vertex_id of [1, 2, 3, 4, 5, 6])
+		{
+			const adj_1 = this.adjacents.value[vertex_id - 1];
+			const adj_2 = this.adjacents.value[vertex_id != 1 ? vertex_id - 2 : 5];
 
-		const geometry = new SphereGeometry(radius, 32, 32);
-		//geometry.vertices = vertices;
-		//geometry.faces = faces;
+			const height_0 = this.height.value;
+			const height_1 = (adj_1 != null && neighbors.has(adj_1)) ? neighbors.get(adj_1).height.value : null;
+			const height_2 = (adj_2 != null && neighbors.has(adj_2)) ? neighbors.get(adj_2).height.value : null;
+
+
+			var avg_height = 0;
+
+			if(height_1 != null && height_2 != null)
+				avg_height = (height_0 + height_1 + height_2) / 3;
+
+			vertices[vertex_id][1] = avg_height;
+		}
+
+		const vertex_output = new Float32Array([
+			...vertices[0],
+			...vertices[2],
+			...vertices[1],
+
+			...vertices[0],
+			...vertices[3],
+			...vertices[2],
+
+			...vertices[0],
+			...vertices[4],
+			...vertices[3],
+
+			...vertices[0],
+			...vertices[5],
+			...vertices[4],
+
+			...vertices[0],
+			...vertices[6],
+			...vertices[5],
+
+			...vertices[0],
+			...vertices[1],
+			...vertices[6],
+		]);
+
+		const geometry = new BufferGeometry();
+		geometry.setAttribute('position', new BufferAttribute(vertex_output, 3));
 
 		this.mesh = new Mesh(geometry, this.getMaterial());
 		this.mesh.receiveShadow = true;
 		this.mesh.castShadow = true;
-		this.mesh.position.set(this.position_x.value, this.height.value, this.position_y.value);
+		this.mesh.position.set(this.position_x.value, 0, this.position_y.value);
 		this.mesh.rotation.set(0, this.angle.value, 0, "YXZ");
 
 		return this.mesh;

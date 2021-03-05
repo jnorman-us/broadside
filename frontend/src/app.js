@@ -39,7 +39,7 @@ export default class App extends React.Component
 			this.client.addObject(game_object.getBase());
 		}
 
-		console.log(this.client);
+		this.client.generateTerrain();
 	}
 
 	handleResize()

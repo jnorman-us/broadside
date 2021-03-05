@@ -83,6 +83,8 @@ exports.Obj = class GameObject
 			base[key_value.key] = key_value.value;
 		}
 
+		base.angle = this.angle.value * -1;
+
 		return base;
 	}
 

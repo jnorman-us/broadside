@@ -19,7 +19,7 @@ exports.Obj = class Tile extends GameObject.Obj
 	initialize(values)
 	{
 		values.moveable = false;
-		values.radius = 15;
+		values.radius = 8;
 		values.angle = Math.PI / 2;
 
 		super.initialize(values);

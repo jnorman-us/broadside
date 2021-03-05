@@ -20,7 +20,7 @@ module.exports = class Client
 
 		var position = new Vector3(100, 100, 100);
 
-		this.sun_light = new DirectionalLight(0xfff6da, 100);
+		this.sun_light = new DirectionalLight(0xfff6da, 3);
 		this.sun_light_target = new Object3D();
         this.sun_light.target = this.sun_light_target;
         this.sun_light.castShadow = true;
@@ -35,7 +35,11 @@ module.exports = class Client
 
         this.ambient_light = new AmbientLight(0xFFF6DA);
 
-		this.terrain = new Terrain(this.scene);
+		this.scene.add(this.sun_light);
+		this.scene.add(this.sun_light_target);
+		this.scene.add(this.ambient_light);
+
+		this.terrain = new Terrain();
 
 		this.interface = new Interface();
 
@@ -108,6 +112,12 @@ module.exports = class Client
 			game_object.update(update);
 		}
 		else throw noSuchObjectError(update.id);
+	}
+
+	// test method that is simulates the response to the "end of terrain stream"
+	generateTerrain()
+	{
+		this.terrain.generate(this.scene);
 	}
 
 	mount(mount_element)

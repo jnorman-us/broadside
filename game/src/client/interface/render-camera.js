@@ -4,9 +4,13 @@ module.exports = class RenderCamera
 {
 	constructor(mode)
 	{
-		this.camera = new OrthographicCamera(0, 0, 0, 0, -1000, 1000);
-		this.camera.position.set(100, 100, 100);
-		this.camera.lookAt(new Vector3(0, 0, 0));
+		this.camera = new OrthographicCamera(0, 0, 0, 0, -10000, 10000);
+		this.camera.position.set(200, 100, 200);
+		this.camera.lookAt(new Vector3(100, 0, 100));
+
+
+		this.camera.zoom = MathUtils.lerp(this.camera.zoom, .001, .1);
+		this.camera.updateProjectionMatrix();
 
 		this.renderer = new WebGLRenderer();
 		this.renderer.physicallyCorrectLights = true;

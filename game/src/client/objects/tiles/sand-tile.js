@@ -1,11 +1,14 @@
-const { MeshBasicMaterial } = require('three');
+const { MeshStandardMaterial } = require('three');
 
 const Tile = require('./tile.js');
 
 exports.TYPE = 'sand-tile';
 
-exports.MATERIAL = new MeshBasicMaterial({
-	color: 0xffff00,
+exports.MATERIAL = new MeshStandardMaterial({
+	roughness: .95,
+	transparent: false,
+	color: 0xede8af,
+	flatShading: true,
 });
 
 exports.Obj = class SandTile extends Tile.Obj
