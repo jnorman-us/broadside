@@ -6,6 +6,7 @@ const HeightMap = require('./height-map.js');
 const SIDE_LENGTH = 64;
 
 const TOTAL_HEIGHT = 400;
+const SAND_HEIGHT = 220;
 const WATER_HEIGHT = 160;
 
 const heightmap = new HeightMap(
@@ -18,7 +19,7 @@ const heightmap = new HeightMap(
 const tile_out = [];
 
 // constants for radius etc
-const radius = 15;
+const radius = 30;
 const a = Math.cos(Math.PI / 6) * radius;
 const b = 3 / 2 * radius;
 
@@ -43,17 +44,19 @@ for(var y = 0; y < height; y ++)
 			else
 				position = Vector.create(x * 2 * b + b, y * a);
 
-			var tile_height = heightmap[y][col] * TOTAL_HEIGHT - WATER_HEIGHT;
+			var tile_height = (Math.round(heightmap[y][col] * 20) + .5) / 20 * TOTAL_HEIGHT;
 
 			var type = '';
-			if(tile_height >= 25)
+			if(tile_height >= SAND_HEIGHT)
 				type = 'grass-tile';
-			else if (tile_height >= 0)
+			else if (tile_height >= WATER_HEIGHT)
 			{
 				type = 'sand-tile';
 			}
 			else
 				type = 'water-tile';
+
+			tile_height -= WATER_HEIGHT;
 
 			const adjacents = [];
 

@@ -1,4 +1,6 @@
-const { Mesh, MeshStandardMaterial, PlaneGeometry } = require('three');
+const { Mesh, MeshStandardMaterial, PlaneBufferGeometry } = require('three');
+
+const WaterMaterial = require('./materials/water.js');
 
 const WaterTile = require('../objects/tiles/water-tile.js');
 const SandTile = require('../objects/tiles/sand-tile.js');
@@ -11,15 +13,16 @@ module.exports = class Terrain
 		this.land_tiles = new Map(); // id, tile
 		this.subsea_tiles = new Map();
 
-		const width = 1550;
-		const height = 900;
+		const width = 3100;
+		const height = 1800;
 
-		this.water = new Mesh(new PlaneGeometry(width + 5, height + 5), new MeshStandardMaterial({
-			color: '#00f5FF',
-			rougness: 0,
-			opacity: .5,
-			transparent: true,
-			flatShading: true,
+		this.water = new Mesh(new PlaneBufferGeometry(width + 5, height + 5, 32, 32), new WaterMaterial.WaterMaterial({
+			roughness: .2,
+			metalness: .2,
+		}));
+
+		this.water = new Mesh(new PlaneBufferGeometry(width + 5, height + 5, 32, 32), new MeshStandardMaterial({
+			color: 0x00dfff,
 		}));
 		this.water.rotation.set(-Math.PI / 2, 0, 0, "YXZ");
 		this.water.position.set(width / 2 - 5, 0, height / 2 - 5)

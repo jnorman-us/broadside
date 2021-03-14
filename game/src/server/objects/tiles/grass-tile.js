@@ -28,7 +28,7 @@ exports.Obj = class GrassTile extends Tile.Obj
 	{
 		const body = super.getBody();
 
-		const green = (this.height.value + 50 - 65) / 45 * 255;
+		const green = (this.height.value + 100 - 160) / 120 * 255;
 
 		body.render.fillStyle = `rgb(60, ${ 255 - green }, 0)`;
 
