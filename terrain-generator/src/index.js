@@ -44,7 +44,7 @@ for(var y = 0; y < height; y ++)
 			else
 				position = Vector.create(x * 2 * b + b, y * a);
 
-			var tile_height = (Math.round(heightmap[y][col] * 20) + .5) / 20 * TOTAL_HEIGHT;
+			var tile_height = (Math.round(heightmap[y][col] * 10) + .5) / 10 * TOTAL_HEIGHT;
 
 			var type = '';
 			if(tile_height >= SAND_HEIGHT)

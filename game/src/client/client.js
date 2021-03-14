@@ -2,7 +2,8 @@ const { AxesHelper, Scene, DirectionalLight, Object3D, Vector2, Vector3, Ambient
 
 const noSuchObjectError = require('../errors/no-such-object.js');
 
-const Terrain = require('./assets/terrain.js');
+const Terrain = require('./world/terrain.js');
+const Sun = require('./world/sun.js');
 
 const GrassTile = require('./objects/tiles/grass-tile.js');
 const SandTile = require('./objects/tiles/sand-tile.js');
@@ -40,6 +41,7 @@ module.exports = class Client
 		this.scene.add(this.ambient_light);
 
 		this.terrain = new Terrain();
+		this.sun = new Sun();
 
 		this.interface = new Interface();
 

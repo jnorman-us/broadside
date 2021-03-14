@@ -1,4 +1,4 @@
-const { BufferAttribute, BufferGeometry, Mesh, Vector3, SphereGeometry } = require('three');
+const { BufferAttribute, BufferGeometry, Mesh, Vector3, Color, } = Three = require('three');
 
 const notImplementedError = require('../../../errors/not-implemented.js');
 
@@ -83,8 +83,27 @@ exports.Obj = class Tile extends GameObject.Obj
 			...vertices[6],
 		]);
 
+		var colors = [];
+
+		for(var i = 0; i < 18; i ++)
+		{
+			const color = new Color(this.getColor());
+			color.add(new Color(
+                Three.Math.randFloat(-.03, .03),
+                Three.Math.randFloat(-.03, .03),
+                Three.Math.randFloat(-.03, .03),
+			));
+
+			colors = [ ...colors, color.r, color.g, color.b ];
+		}
+
+		const color_output = new Float32Array(colors);
+
 		const geometry = new BufferGeometry();
 		geometry.setAttribute('position', new BufferAttribute(vertex_output, 3));
+		geometry.setAttribute('color', new BufferAttribute(color_output, 3));
+
+		const material = this.getMaterial();
 
 		this.mesh = new Mesh(geometry, this.getMaterial());
 		this.mesh.receiveShadow = true;
@@ -93,6 +112,11 @@ exports.Obj = class Tile extends GameObject.Obj
 		this.mesh.rotation.set(0, this.angle.value, 0, "YXZ");
 
 		return this.mesh;
+	}
+
+	getColor()
+	{
+		throw notImplementedError('Tile.getColor()');
 	}
 
 	getMaterial()

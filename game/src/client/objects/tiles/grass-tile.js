@@ -1,11 +1,13 @@
-const { MeshPhysicalMaterial } = require('three');
+const { MeshPhysicalMaterial, FaceColors } = require('three');
 
 const Tile = require('./tile.js');
 
 exports.TYPE = 'grass-tile';
 
+exports.COLOR = '#7cfc00',
+
 exports.MATERIAL = new MeshPhysicalMaterial({
-	color: '#7cfc00',
+	vertexColors: FaceColors,
 	reflectivity: 0,
 	clearcoat: 1,
 	clearcoatRoughness: 1,
@@ -24,5 +26,10 @@ exports.Obj = class GrassTile extends Tile.Obj
 	getMaterial()
 	{
 		return exports.MATERIAL;
+	}
+
+	getColor()
+	{
+		return exports.COLOR;
 	}
 }
