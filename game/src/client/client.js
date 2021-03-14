@@ -20,7 +20,7 @@ module.exports = class Client
 
 		var position = new Vector3(100, 100, 100);
 
-		this.sun_light = new DirectionalLight(0xfff6da, 3);
+		this.sun_light = new DirectionalLight(0xfff6da, 2.5);
 		this.sun_light_target = new Object3D();
         this.sun_light.target = this.sun_light_target;
         this.sun_light.castShadow = true;
@@ -28,7 +28,7 @@ module.exports = class Client
         this.sun_light.shadow.camera.zoom = .02;
         this.sun_light.shadow.camera.far = 2000;
 
-		this.sun_light.position.set(-500, 1000, 500);
+		this.sun_light.position.set(-500, 500, 500);
 		this.sun_light.position.add(position);
 		this.sun_light_target.position.set(0, 0, 0);
 		this.sun_light_target.position.add(position);

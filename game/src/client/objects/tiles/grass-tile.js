@@ -1,13 +1,16 @@
-const { MeshStandardMaterial } = require('three');
+const { MeshPhysicalMaterial } = require('three');
 
 const Tile = require('./tile.js');
 
 exports.TYPE = 'grass-tile';
 
-exports.MATERIAL = new MeshStandardMaterial({
-	roughness: .95,
-	transparent: false,
-	color: 0x7cfc00,
+exports.MATERIAL = new MeshPhysicalMaterial({
+	color: '#7cfc00',
+	reflectivity: 0,
+	clearcoat: 1,
+	clearcoatRoughness: 1,
+	metalness: 0,
+	roughness: .5,
 	flatShading: true,
 });
 

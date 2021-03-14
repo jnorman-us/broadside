@@ -7,7 +7,7 @@ exports.TYPE = 'sand-tile';
 exports.MATERIAL = new MeshStandardMaterial({
 	roughness: .95,
 	transparent: false,
-	color: 0xede8af,
+	color: '#ffecbc',
 	flatShading: true,
 });
 

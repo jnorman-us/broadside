@@ -5,20 +5,20 @@ const HeightMap = require('./height-map.js');
 
 const SIDE_LENGTH = 64;
 
-const TOTAL_HEIGHT = 100;
-const WATER_HEIGHT = 50;
+const TOTAL_HEIGHT = 400;
+const WATER_HEIGHT = 160;
 
 const heightmap = new HeightMap(
 	SIDE_LENGTH, // mapDimension
 	1, // unitCount
-	7, // roughness
+	1, // roughness
 	false, // tile
 ).mapData;
 
 const tile_out = [];
 
 // constants for radius etc
-const radius = 8;
+const radius = 15;
 const a = Math.cos(Math.PI / 6) * radius;
 const b = 3 / 2 * radius;
 
