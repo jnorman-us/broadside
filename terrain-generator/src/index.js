@@ -3,8 +3,13 @@ const FileSystem = require('fs');
 
 const HeightMap = require('./height-map.js');
 
-const SIDE_LENGTH = 64;
+const SIDE_LENGTH = 128;
+const WIDTH = 8;
+const RADIUS = WIDTH / Math.cos(Math.PI / 4);
 
+console.log(RADIUS);
+
+const HEIGHT_STEPS = 10;
 const TOTAL_HEIGHT = 400;
 const SAND_HEIGHT = 220;
 const WATER_HEIGHT = 160;
@@ -18,126 +23,51 @@ const heightmap = new HeightMap(
 
 const tile_out = [];
 
-// constants for radius etc
-const radius = 30;
-const a = Math.cos(Math.PI / 6) * radius;
-const b = 3 / 2 * radius;
-
-const height = heightmap.length;
-var width = Math.min(heightmap[0].length, heightmap[1].length);
-width = width % 2 == 0 ? width : width - 1;
-const map_width = width / 2;
-
 var index = 0;
-for(var y = 0; y < height; y ++)
+for(var y = 0; y < SIDE_LENGTH; y ++)
 {
-	var x = 0;
-	for(var col = 0; col < width; col ++)
+	for(var x = 0; x < SIDE_LENGTH; x ++)
 	{
-		if((y % 2 == 0 && col % 2 == 0) || (y % 2 == 1 && col % 2 == 1))
-		{
-			index = y * map_width + x;
+		var index = y * SIDE_LENGTH + x;
 
-			var position = null;
-			if(y % 2 == 0)
-				position = Vector.create(x * 2 * b, y * a);
-			else
-				position = Vector.create(x * 2 * b + b, y * a);
+		var position = Vector.create(x * 2 * WIDTH, y * 2 * WIDTH);
+		var tile_height = (Math.round(heightmap[y][x] * HEIGHT_STEPS) + .5) / HEIGHT_STEPS * TOTAL_HEIGHT; // 10 steps
+		var type = '';
 
-			var tile_height = (Math.round(heightmap[y][col] * 10) + .5) / 10 * TOTAL_HEIGHT;
+		if(tile_height >= SAND_HEIGHT)
+			type = 'grass-tile';
+		else if(tile_height >= WATER_HEIGHT)
+			type = 'sand-tile';
+		else
+			type = 'water-tile';
 
-			var type = '';
-			if(tile_height >= SAND_HEIGHT)
-				type = 'grass-tile';
-			else if (tile_height >= WATER_HEIGHT)
-			{
-				type = 'sand-tile';
-			}
-			else
-				type = 'water-tile';
+		tile_height -= WATER_HEIGHT;
 
-			tile_height -= WATER_HEIGHT;
+		const adjacents = [ null, null, null, null ];
+		adjacents[0] = x - 1 >= 0 ? y * SIDE_LENGTH + (x - 1) : null; // left
+		adjacents[1] = y - 1 >= 0 ? (y - 1) * SIDE_LENGTH + x : null; // top
+		adjacents[2] = x + 1 < SIDE_LENGTH ? y * SIDE_LENGTH + (x + 1) : null; // right
+		adjacents[3] = y + 1 < SIDE_LENGTH ? (y + 1) * SIDE_LENGTH + x : null; // bottom
 
-			const adjacents = [];
-
-			if(y % 2 != 0)
-			{
-				if(y - 1 >= 0) // top-left
-					adjacents.push((y - 1) * map_width + x);
-				else
-					adjacents.push(null);
-				if(y - 2 >= 0) // top
-					adjacents.push((y - 2) * map_width + x);
-				else
-					adjacents.push(null);
-				if(x + 1 < map_width && y - 1 >= 0) // top-right
-					adjacents.push((y - 1) * map_width + (x + 1));
-				else
-					adjacents.push(null);
-				if(x + 1 < map_width && y + 1 < height) // bottom-right
-					adjacents.push((y + 1) * map_width + (x + 1));
-				else
-					adjacents.push(null);
-				if(y + 2 < height) // bottom
-					adjacents.push((y + 2) * map_width + x);
-				else
-					adjacents.push(null);
-				if(y + 1 < height) // bottom-left
-					adjacents.push((y + 1) * map_width + x);
-				else
-					adjacents.push(null);
-			}
-			else
-			{
-				if(y - 1 >= 0 && x - 1 >= 0) // top-left
-					adjacents.push((y - 1) * map_width + (x - 1));
-				else
-					adjacents.push(null);
-				if(y - 2 >= 0) // top
-					adjacents.push((y - 2) * map_width + x);
-				else
-					adjacents.push(null);
-				if(y - 1 >= 0) // top-right
-					adjacents.push((y - 1) * map_width + x);
-				else
-					adjacents.push(null);
-				if(y + 1 < height) // bottom-right
-					adjacents.push((y + 1) * map_width + x);
-				else
-					adjacents.push(null);
-				if(y + 2 < height) // bottom
-					adjacents.push((y + 2) * map_width + x);
-				else
-					adjacents.push(null);
-				if(y + 1 < height && x - 1 >= 0) // bottom-left
-					adjacents.push((y + 1) * map_width + (x - 1));
-				else
-					adjacents.push(null);
-			}
-
-			tile_out.push({
-				id: index,
-				type: type,
-				height: tile_height,
-				position_x: position.x,
-				position_y: position.y,
-				adjacents: adjacents,
-			});
-			x ++;
-		}
+		tile_out.push({
+			id: index,
+			type: type,
+			height: tile_height,
+			radius: RADIUS,
+			position_x: position.x,
+			position_y: position.y,
+			adjacents: adjacents,
+		});
 	}
 }
-
-const map_width_b = map_width * 2 * b - b;
-const map_height = height * a - a;
 
 tile_out.push({
 	id: index ++,
 	type: 'world-border',
-	border_width: map_width_b,
-	border_height: map_height,
-	position_x: map_width_b / 2,
-	position_y: map_height / 2,
+	border_width: SIDE_LENGTH * 2 * RADIUS,
+	border_height: SIDE_LENGTH * 2 * RADIUS,
+	position_x: SIDE_LENGTH * 2 * RADIUS / 2,
+	position_y: SIDE_LENGTH * 2 * RADIUS / 2,
 });
 
 FileSystem.writeFileSync('../frontend/src/test-map.json', JSON.stringify(tile_out));

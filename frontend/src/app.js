@@ -23,7 +23,7 @@ export default class App extends React.Component
 	{
 		window.addEventListener('resize', this.handleResize.bind(this));
 
-		//this.server.mount(this.physics_mount);
+		this.server.mount(this.physics_mount);
 		this.server.start();
 
 		this.client.mount(this.renderer_mount);
@@ -47,8 +47,8 @@ export default class App extends React.Component
 		this.client.unmount();
 		this.client.mount(this.renderer_mount);
 
-		//this.server.unmount();
-		//this.server.mount(this.physics_mount);
+		this.server.unmount();
+		this.server.mount(this.physics_mount);
 	}
 
 	render()

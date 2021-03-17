@@ -19,15 +19,14 @@ exports.Obj = class Tile extends GameObject.Obj
 	initialize(values)
 	{
 		values.moveable = false;
-		values.radius = 30;
-		values.angle = Math.PI / 2;
+		values.angle = 0;
 
 		super.initialize(values);
 	}
 
 	getBody()
 	{
-		const body = Bodies.polygon(0, 0, 6, this.radius.value);
+		const body = Bodies.polygon(0, 0, 4, this.radius.value);
 
 		return body; // x, y, # sides, radius
 	}
