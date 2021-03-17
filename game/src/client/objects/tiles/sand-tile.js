@@ -9,7 +9,7 @@ exports.COLOR = '#ffecbc';
 exports.MATERIAL = new MeshStandardMaterial({
 	roughness: .95,
 	transparent: false,
-	vertexColors: FaceColors,
+	color: exports.COLOR,
 	flatShading: true,
 });
 

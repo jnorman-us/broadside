@@ -7,7 +7,7 @@ exports.TYPE = 'grass-tile';
 exports.COLOR = '#7cfc00',
 
 exports.MATERIAL = new MeshPhysicalMaterial({
-	vertexColors: FaceColors,
+	color: exports.COLOR,
 	reflectivity: 0,
 	clearcoat: 1,
 	clearcoatRoughness: 1,

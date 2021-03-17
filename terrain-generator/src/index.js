@@ -3,16 +3,16 @@ const FileSystem = require('fs');
 
 const HeightMap = require('./height-map.js');
 
-const SIDE_LENGTH = 128;
+const SIDE_LENGTH = 64;
 const WIDTH = 8;
 const RADIUS = WIDTH / Math.cos(Math.PI / 4);
 
 console.log(RADIUS);
 
 const HEIGHT_STEPS = 10;
-const TOTAL_HEIGHT = 400;
-const SAND_HEIGHT = 220;
-const WATER_HEIGHT = 160;
+const TOTAL_HEIGHT = 200;
+const SAND_HEIGHT = 110;
+const WATER_HEIGHT = 80;
 
 const heightmap = new HeightMap(
 	SIDE_LENGTH, // mapDimension

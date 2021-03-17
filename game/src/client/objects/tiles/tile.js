@@ -28,34 +28,51 @@ exports.Obj = class Tile extends GameObject.Obj
 	generateMesh(neighbors)
 	{
 		const radius = this.radius.value;
+		const width = radius * Math.cos(Math.PI / 4);
+		const height = this.height.value;
+
+		const adjacents = this.adjacents.value;
+		console.log(adjacents);
+
+		const left_nbr = (adjacents[0] != null && neighbors.has(adjacents[0]))
+			? neighbors.get(adjacents[0]) : null;
+		const top_nbr = (adjacents[1] != null && neighbors.has(adjacents[1]))
+			? neighbors.get(adjacents[1]) : null;
+		const right_nbr = (adjacents[2] != null && neighbors.has(adjacents[2]))
+			? neighbors.get(adjacents[2]) : null;
+		const bottom_nbr = (adjacents[3] != null && neighbors.has(adjacents[3]))
+			? neighbors.get(adjacents[3]) : null;
+
+		const left_height = left_nbr != null ? (left_nbr.height.value < height ? left_nbr.height.value : null) : -100;
+		const top_height = top_nbr != null ? (top_nbr.height.value < height ? top_nbr.height.value : null) : -100;
+		const right_height = right_nbr != null ? (right_nbr.height.value < height ? right_nbr.height.value : null) : -100;
+		const bottom_height = bottom_nbr != null ? (bottom_nbr.height.value < height ? bottom_nbr.height.value : null) : -100;
 
 		const vertices = [
-			[0, this.height.value, 0], // center
-			[0, 0, radius], // bottom, rotated to left
-			[-radius * Math.sin(Math.PI / 3), 0, radius * Math.cos(Math.PI / 3)], // bottom left, rotated to top left
-			[-radius * Math.sin(Math.PI / 3), 0, -radius * Math.cos(Math.PI / 3)], // top left, rotated to top right
-			[0, 0, -radius], // top, rotated to bot right
-			[radius * Math.sin(Math.PI / 3), 0, -radius * Math.cos(Math.PI / 3)], // top right, rotated to bottom right
-			[radius * Math.sin(Math.PI / 3), 0, radius * Math.cos(Math.PI / 3)], // bottom right, rotated to bottom left
+			[-width, height, width], // bottom left 0
+			[-width, height, -width], // top left 1
+			[width, height, -width], // top right 2
+			[width, height, width], // bottom right 3
+
+			// left flap
+			left_height != null ? [-width, left_height, width] : null, // 4
+			left_height != null ? [-width, left_height, -width] : null, // 5
+
+			// top flap
+			top_height != null ? [-width, top_height, -width] : null, // 6
+			top_height != null ? [width, top_height, -width] : null, // 7
+
+			// right flap
+			right_height != null ? [width, right_height, -width] : null, // 8
+			right_height != null ? [width, right_height, width] : null, // 9
+
+			// bottom flap
+			bottom_height != null ? [width, bottom_height, width] : null, // 10
+			bottom_height != null ? [-width, bottom_height, width] : null, // 11
 		];
 
-		for(const vertex_id of [1, 2, 3, 4, 5, 6])
-		{
-			const adj_1 = this.adjacents.value[vertex_id - 1];
-			const adj_2 = this.adjacents.value[vertex_id != 1 ? vertex_id - 2 : 5];
-
-			const height_0 = this.height.value;
-			const height_1 = (adj_1 != null && neighbors.has(adj_1)) ? neighbors.get(adj_1).height.value : null;
-			const height_2 = (adj_2 != null && neighbors.has(adj_2)) ? neighbors.get(adj_2).height.value : null;
-
-
-			var avg_height = 0;
-
-			if(height_1 != null && height_2 != null)
-				avg_height = (height_0 + height_1 + height_2) / 3;
-
-			vertices[vertex_id][1] = avg_height;
-		}
+		console.log(vertices);
+		console.log((vertices[10] != null ? vertices[4] : []))
 
 		const vertex_output = new Float32Array([
 			...vertices[0],
@@ -66,42 +83,45 @@ exports.Obj = class Tile extends GameObject.Obj
 			...vertices[3],
 			...vertices[2],
 
-			...vertices[0],
-			...vertices[4],
-			...vertices[3],
+			// left flap
+			...(vertices[4] != null ? vertices[0] : []),
+			...(vertices[4] != null ? vertices[1] : []),
+			...(vertices[4] != null ? vertices[4] : []),
 
-			...vertices[0],
-			...vertices[5],
-			...vertices[4],
+			...(vertices[4] != null ? vertices[1] : []),
+			...(vertices[4] != null ? vertices[5] : []),
+			...(vertices[4] != null ? vertices[4] : []),
 
-			...vertices[0],
-			...vertices[6],
-			...vertices[5],
+			// top flap
+			...(vertices[6] != null ? vertices[1] : []),
+			...(vertices[6] != null ? vertices[2] : []),
+			...(vertices[6] != null ? vertices[6] : []),
 
-			...vertices[0],
-			...vertices[1],
-			...vertices[6],
+			...(vertices[6] != null ? vertices[2] : []),
+			...(vertices[6] != null ? vertices[7] : []),
+			...(vertices[6] != null ? vertices[6] : []),
+
+			// right flap
+			...(vertices[8] != null ? vertices[2] : []),
+			...(vertices[8] != null ? vertices[3] : []),
+			...(vertices[8] != null ? vertices[8] : []),
+
+			...(vertices[8] != null ? vertices[3] : []),
+			...(vertices[8] != null ? vertices[9] : []),
+			...(vertices[8] != null ? vertices[8] : []),
+
+			// bottom flap
+			...(vertices[10] != null ? vertices[3] : []),
+			...(vertices[10] != null ? vertices[0] : []),
+			...(vertices[10] != null ? vertices[10] : []),
+
+			...(vertices[10] != null ? vertices[0] : []),
+			...(vertices[10] != null ? vertices[11] : []),
+			...(vertices[10] != null ? vertices[10] : []),
 		]);
-
-		var colors = [];
-
-		for(var i = 0; i < 18; i ++)
-		{
-			const color = new Color(this.getColor());
-			color.add(new Color(
-                Three.Math.randFloat(-.03, .03),
-                Three.Math.randFloat(-.03, .03),
-                Three.Math.randFloat(-.03, .03),
-			));
-
-			colors = [ ...colors, color.r, color.g, color.b ];
-		}
-
-		const color_output = new Float32Array(colors);
 
 		const geometry = new BufferGeometry();
 		geometry.setAttribute('position', new BufferAttribute(vertex_output, 3));
-		geometry.setAttribute('color', new BufferAttribute(color_output, 3));
 
 		const material = this.getMaterial();
 

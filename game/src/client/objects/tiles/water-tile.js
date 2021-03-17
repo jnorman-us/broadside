@@ -22,7 +22,7 @@ exports.MATERIAL = new MeshPhysicalMaterial({
 	metalness: 0,
 	roughness: .5,
 	flatShading: true,
-	vertexColors: FaceColors,
+	color: exports.COLOR,
 });
 
 exports.Obj = class WaterTile extends Tile.Obj
